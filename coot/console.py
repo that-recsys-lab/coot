@@ -7,10 +7,10 @@ import sys
 from argparse import ArgumentParser, FileType, ArgumentTypeError, Action
 from collections import namedtuple
 from itertools import chain
-from toot import config, commands, CLIENT_NAME, CLIENT_WEBSITE, __version__, settings
-from toot.exceptions import ApiError, ConsoleError
-from toot.output import print_out, print_err
-from toot.settings import get_setting
+from coot import config, commands, CLIENT_NAME, CLIENT_WEBSITE, __version__, settings
+from coot.exceptions import ApiError, ConsoleError
+from coot.output import print_out, print_err
+from coot.settings import get_setting
 
 VISIBILITY_CHOICES = ["public", "unlisted", "private", "direct"]
 VISIBILITY_CHOICES_STR = ", ".join(f"'{v}'" for v in VISIBILITY_CHOICES)

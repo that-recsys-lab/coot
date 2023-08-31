@@ -3,7 +3,7 @@
 from setuptools import setup
 
 long_description = """
-Toot is a CLI and TUI tool for interacting with Mastodon instances from the
+Coot is a CLI and TUI tool for interacting with Mastodon instances from the
 command line.
 
 Allows posting text and media to the timeline, searching, following, muting
@@ -11,7 +11,7 @@ and blocking accounts and other actions.
 """
 
 setup(
-    name='toot',
+    name='coot',
     version='0.38.1',
     description='Mastodon CLI client',
     long_description=long_description.strip(),
@@ -31,7 +31,7 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3',
     ],
-    packages=['toot', 'toot.tui', 'toot.utils'],
+    packages=['coot', 'coot.tui', 'coot.utils'],
     python_requires=">=3.7",
     install_requires=[
         "requests>=2.13,<3.0",
@@ -42,7 +42,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'toot=toot.console:main',
+            'coot=coot.console:main',
         ],
     }
 )
