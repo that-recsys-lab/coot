@@ -194,10 +194,15 @@ class Timeline(urwid.Columns):
         if key in ("m", "M"):
             self.tui.show_media(status)
             return
-
-        if key in ("q", "Q"):
+        
+        if key in ("x", "X"):
             self._emit("close")
+# for future command            self.tui.show_view(self.status_details)
             return
+
+#         if key in ("q", "Q"):
+#             self._emit("close")
+#             return
 
         if key == "esc" and self.is_thread:
             self._emit("close")
@@ -244,10 +249,7 @@ class Timeline(urwid.Columns):
             self._emit("save", status)
             return
         
-        if key in ("x", "X"):
-            self._emit("close")
-# for future command            self.tui.show_view(self.status_details)
-            return
+
         
         if key in ("z", "Z"):
             self.tui.show_status_zoom(self.status_details)
