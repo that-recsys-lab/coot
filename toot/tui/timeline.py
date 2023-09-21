@@ -245,7 +245,7 @@ class Timeline(urwid.Columns):
             return
         
         if key in ("x", "X"):
-            self.refresh_status_details()
+            self._emit("close")
 # for future command            self.tui.show_view(self.status_details)
             return
         
