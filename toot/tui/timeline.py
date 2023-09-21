@@ -243,7 +243,11 @@ class Timeline(urwid.Columns):
         if key in ("e", "E"):
             self._emit("save", status)
             return
-
+        
+        if key in ("x", "X"):
+            self.tui.show_view(self.status_details)
+            return
+        
         if key in ("z", "Z"):
             self.tui.show_status_zoom(self.status_details)
             return
