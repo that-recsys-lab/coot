@@ -6,7 +6,7 @@ import uuid
 from typing import BinaryIO, List, Optional
 from urllib.parse import urlparse, urlencode, quote
 
-from toot import App, User, http, CLIENT_NAME, CLIENT_WEBSITE
+from toot import App, User, my_http, CLIENT_NAME, CLIENT_WEBSITE
 from toot.exceptions import AuthenticationError, ConsoleError
 from toot.utils import drop_empty_values, str_bool, str_bool_nullable
 
@@ -39,17 +39,17 @@ def find_account(app, user, account_name):
 
 def _account_action(app, user, account, action):
     url = f"/api/v1/accounts/{account}/{action}"
-    return http.post(app, user, url).json()
+    return my_http.post(app, user, url).json()
 
 
 def _status_action(app, user, status_id, action, data=None):
     url = f"/api/v1/statuses/{status_id}/{action}"
-    return http.post(app, user, url, data=data).json()
+    return my_http.post(app, user, url, data=data).json()
 
 
 def _tag_action(app, user, tag_name, action):
     url = f"/api/v1/tags/{tag_name}/{action}"
-    return http.post(app, user, url).json()
+    return my_http.post(app, user, url).json()
 
 
 def create_app(base_url):
@@ -62,7 +62,7 @@ def create_app(base_url):
         'website': CLIENT_WEBSITE,
     }
 
-    return http.anon_post(url, json=json).json()
+    return my_http.anon_post(url, json=json).json()
 
 
 def get_muted_accounts(app, user):
@@ -70,7 +70,7 @@ def get_muted_accounts(app, user):
 
 
 def get_blocked_accounts(app, user):
-    return http.get(app, user, "/api/v1/blocks").json()
+    return my_http.get(app, user, "/api/v1/blocks").json()
 
 
 def register_account(app, username, email, password, locale="en", agreement=True):
@@ -90,7 +90,7 @@ def register_account(app, username, email, password, locale="en", agreement=True
         "locale": locale
     }
 
-    return http.anon_post(url, json=json, headers=headers).json()
+    return my_http.anon_post(url, json=json, headers=headers).json()
 
 
 def update_account(
@@ -124,7 +124,7 @@ def update_account(
         "source[sensitive]": str_bool_nullable(sensitive),
     })
 
-    return http.patch(app, user, "/api/v1/accounts/update_credentials", files=files, data=data)
+    return my_http.patch(app, user, "/api/v1/accounts/update_credentials", files=files, data=data)
 
 
 def fetch_app_token(app):
@@ -136,7 +136,7 @@ def fetch_app_token(app):
         "scope": "read write"
     }
 
-    return http.anon_post(f"{app.base_url}/oauth/token", json=json).json()
+    return my_http.anon_post(f"{app.base_url}/oauth/token", json=json).json()
 
 
 def login(app, username, password):
@@ -151,7 +151,7 @@ def login(app, username, password):
         'scope': SCOPES,
     }
 
-    response = http.anon_post(url, data=data, allow_redirects=False)
+    response = my_http.anon_post(url, data=data, allow_redirects=False)
 
     # If auth fails, it redirects to the login page
     if response.is_redirect:
@@ -181,7 +181,7 @@ def request_access_token(app, authorization_code):
         'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
     }
 
-    return http.anon_post(url, data=data, allow_redirects=False).json()
+    return my_http.anon_post(url, data=data, allow_redirects=False).json()
 
 
 def post_status(
@@ -232,7 +232,7 @@ def post_status(
             "hide_totals": poll_hide_totals,
         }
 
-    return http.post(app, user, '/api/v1/statuses', json=data, headers=headers).json()
+    return my_http.post(app, user, '/api/v1/statuses', json=data, headers=headers).json()
 
 
 def fetch_status(app, user, id):
@@ -240,7 +240,7 @@ def fetch_status(app, user, id):
     Fetch a single status
     https://docs.joinmastodon.org/methods/statuses/#get
     """
-    return http.get(app, user, f"/api/v1/statuses/{id}").json()
+    return my_http.get(app, user, f"/api/v1/statuses/{id}").json()
 
 
 def scheduled_statuses(app, user):
@@ -248,7 +248,7 @@ def scheduled_statuses(app, user):
     List scheduled statuses
     https://docs.joinmastodon.org/methods/scheduled_statuses/#get
     """
-    return http.get(app, user, "/api/v1/scheduled_statuses").json()
+    return my_http.get(app, user, "/api/v1/scheduled_statuses").json()
 
 
 def delete_status(app, user, status_id):
@@ -256,7 +256,7 @@ def delete_status(app, user, status_id):
     Deletes a status with given ID.
     https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#deleting-a-status
     """
-    return http.delete(app, user, f"/api/v1/statuses/{status_id}")
+    return my_http.delete(app, user, f"/api/v1/statuses/{status_id}")
 
 
 def favourite(app, user, status_id):
@@ -297,12 +297,12 @@ def translate(app, user, status_id):
 
 def context(app, user, status_id):
     url = f"/api/v1/statuses/{status_id}/context"
-    return http.get(app, user, url).json()
+    return my_http.get(app, user, url).json()
 
 
 def reblogged_by(app, user, status_id):
     url = f"/api/v1/statuses/{status_id}/reblogged_by"
-    return http.get(app, user, url).json()
+    return my_http.get(app, user, url).json()
 
 
 def _get_next_path(headers):
@@ -316,14 +316,14 @@ def _get_next_path(headers):
 
 def _timeline_generator(app, user, path, params=None):
     while path:
-        response = http.get(app, user, path, params)
+        response = my_http.get(app, user, path, params)
         yield response.json()
         path = _get_next_path(response.headers)
 
 
 def _notification_timeline_generator(app, user, path, params=None):
     while path:
-        response = http.get(app, user, path, params)
+        response = my_http.get(app, user, path, params)
         notification = response.json()
         yield [n["status"] for n in notification if n["status"]]
         path = _get_next_path(response.headers)
@@ -331,7 +331,7 @@ def _notification_timeline_generator(app, user, path, params=None):
 
 def _conversation_timeline_generator(app, user, path, params=None):
     while path:
-        response = http.get(app, user, path, params)
+        response = my_http.get(app, user, path, params)
         conversation = response.json()
         yield [c["last_status"] for c in conversation if c["last_status"]]
         path = _get_next_path(response.headers)
@@ -389,7 +389,7 @@ def timeline_list_generator(app, user, list_id, limit=20):
 def _anon_timeline_generator(instance, path, params=None):
     while path:
         url = f"https://{instance}{path}"
-        response = http.anon_get(url, params)
+        response = my_http.anon_get(url, params)
         yield response.json()
         path = _get_next_path(response.headers)
 
@@ -407,7 +407,7 @@ def anon_tag_timeline_generator(instance, hashtag, local=False, limit=20):
 
 
 def get_media(app: App, user: User, id: str):
-    return http.get(app, user, f"/api/v1/media/{id}").json()
+    return my_http.get(app, user, f"/api/v1/media/{id}").json()
 
 
 def upload_media(
@@ -426,7 +426,7 @@ def upload_media(
         "thumbnail": _add_mime_type(thumbnail)
     })
 
-    return http.post(app, user, "/api/v2/media", data=data, files=files).json()
+    return my_http.post(app, user, "/api/v2/media", data=data, files=files).json()
 
 
 def _add_mime_type(file):
@@ -451,7 +451,7 @@ def search(app, user, query, resolve=False, type=None):
     Perform a search.
     https://docs.joinmastodon.org/methods/search/#v2
     """
-    return http.get(app, user, "/api/v2/search", {
+    return my_http.get(app, user, "/api/v2/search", {
         "q": query,
         "resolve": resolve,
         "type": type
@@ -477,7 +477,7 @@ def unfollow_tag(app, user, tag_name):
 def _get_response_list(app, user, path):
     items = []
     while path:
-        response = http.get(app, user, path)
+        response = my_http.get(app, user, path)
         items += response.json()
         path = _get_next_path(response.headers)
     return items
@@ -499,18 +499,18 @@ def followed_tags(app, user):
 
 
 def whois(app, user, account):
-    return http.get(app, user, f'/api/v1/accounts/{account}').json()
+    return my_http.get(app, user, f'/api/v1/accounts/{account}').json()
 
 
 def vote(app, user, poll_id, choices: List[int]):
     url = f"/api/v1/polls/{poll_id}/votes"
     json = {'choices': choices}
-    return http.post(app, user, url, json=json).json()
+    return my_http.post(app, user, url, json=json).json()
 
 
 def get_relationship(app, user, account):
     params = {"id[]": account}
-    return http.get(app, user, '/api/v1/accounts/relationships', params).json()[0]
+    return my_http.get(app, user, '/api/v1/accounts/relationships', params).json()[0]
 
 
 def mute(app, user, account):
@@ -538,26 +538,26 @@ def blocked(app, user):
 
 
 def verify_credentials(app, user):
-    return http.get(app, user, '/api/v1/accounts/verify_credentials').json()
+    return my_http.get(app, user, '/api/v1/accounts/verify_credentials').json()
 
 
 def single_status(app, user, status_id):
     url = f"/api/v1/statuses/{status_id}"
-    return http.get(app, user, url).json()
+    return my_http.get(app, user, url).json()
 
 
 def get_notifications(app, user, exclude_types=[], limit=20):
     params = {"exclude_types[]": exclude_types, "limit": limit}
-    return http.get(app, user, '/api/v1/notifications', params).json()
+    return my_http.get(app, user, '/api/v1/notifications', params).json()
 
 
 def clear_notifications(app, user):
-    http.post(app, user, '/api/v1/notifications/clear')
+    my_http.post(app, user, '/api/v1/notifications/clear')
 
 
 def get_instance(base_url):
     url = f"{base_url}/api/v1/instance"
-    return http.anon_get(url).json()
+    return my_http.anon_get(url).json()
 
 
 def get_lists(app, user):
@@ -583,20 +583,20 @@ def create_list(app, user, title, replies_policy):
     json = {'title': title}
     if replies_policy:
         json['replies_policy'] = replies_policy
-    return http.post(app, user, url, json=json).json()
+    return my_http.post(app, user, url, json=json).json()
 
 
 def delete_list(app, user, id):
-    return http.delete(app, user, f"/api/v1/lists/{id}")
+    return my_http.delete(app, user, f"/api/v1/lists/{id}")
 
 
 def add_accounts_to_list(app, user, list_id, account_ids):
     url = f"/api/v1/lists/{list_id}/accounts"
     json = {'account_ids': account_ids}
-    return http.post(app, user, url, json=json).json()
+    return my_http.post(app, user, url, json=json).json()
 
 
 def remove_accounts_from_list(app, user, list_id, account_ids):
     url = f"/api/v1/lists/{list_id}/accounts"
     json = {'account_ids': account_ids}
-    return http.delete(app, user, url, json=json)
+    return my_http.delete(app, user, url, json=json)

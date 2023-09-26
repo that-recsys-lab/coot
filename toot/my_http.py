@@ -1,9 +1,9 @@
-from requests import Request, Session
+import requests
 from requests.exceptions import RequestException
 
 from toot import __version__
 from toot.exceptions import NotFoundError, ApiError
-from toot.logging import log_request, log_response
+from toot.my_logging import log_request, log_response
 
 
 def send_request(request, allow_redirects=True):
@@ -14,7 +14,7 @@ def send_request(request, allow_redirects=True):
     log_request(request)
 
     try:
-        with Session() as session:
+        with requests.Session() as session:
             prepared = session.prepare_request(request)
             settings = session.merge_environment_settings(prepared.url, {}, None, None, None)
             response = session.send(prepared, allow_redirects=allow_redirects, **settings)
@@ -58,14 +58,14 @@ def get(app, user, path, params=None, headers=None):
     headers = headers or {}
     headers["Authorization"] = f"Bearer {user.access_token}"
 
-    request = Request('GET', url, headers, params=params)
+    request = requests.Request('GET', url, headers, params=params)
     response = send_request(request)
 
     return process_response(response)
 
 
 def anon_get(url, params=None):
-    request = Request('GET', url, None, params=params)
+    request = requests.Request('GET', url, None, params=params)
     response = send_request(request)
 
     return process_response(response)
@@ -86,7 +86,7 @@ def patch(app, user, path, headers=None, files=None, data=None, json=None):
     headers = headers or {}
     headers["Authorization"] = f"Bearer {user.access_token}"
 
-    request = Request('PATCH', url, headers=headers, files=files, data=data, json=json)
+    request = requests.Request('PATCH', url, headers=headers, files=files, data=data, json=json)
     response = send_request(request)
 
     return process_response(response)
@@ -98,14 +98,14 @@ def delete(app, user, path, data=None, json=None, headers=None):
     headers = headers or {}
     headers["Authorization"] = f"Bearer {user.access_token}"
 
-    request = Request('DELETE', url, headers=headers, data=data, json=json)
+    request = requests.Request('DELETE', url, headers=headers, data=data, json=json)
     response = send_request(request)
 
     return process_response(response)
 
 
 def anon_post(url, headers=None, files=None, data=None, json=None, allow_redirects=True):
-    request = Request(method="POST", url=url, headers=headers, files=files, data=data, json=json)
+    request = requests.Request(method="POST", url=url, headers=headers, files=files, data=data, json=json)
     response = send_request(request, allow_redirects)
 
     return process_response(response)

@@ -5,7 +5,7 @@ import re
 from collections import namedtuple
 from unittest import mock
 
-from toot import console, User, App, http
+from toot import console, User, App, my_http
 from toot.exceptions import ConsoleError
 
 from tests.utils import MockResponse
