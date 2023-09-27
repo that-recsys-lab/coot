@@ -15,3 +15,7 @@ debug.log
 /pyrightconfig.json
 /venv/
 /book
+.idea/coot.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+*.xml
