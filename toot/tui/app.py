@@ -40,6 +40,15 @@ class Header(urwid.WidgetWrap):
         widget = urwid.Padding(widget)
         self._wrapped_widget = widget
 
+    # Change the coot/toot in the header
+    def change_servername(self, text):
+        self.cols = urwid.Columns([
+            ("pack", urwid.Text(('header_bold', text))),
+            ("pack", urwid.Text(('header', ' | {}@{}'.format(self.user.username, self.app.instance)))),
+            ("pack", self.text),
+        ])
+        self._wrapped_widget.original_widget = urwid.AttrMap(self.cols, 'header')
+
     def clear_text(self, text):
         self.text.set_text("")
 
