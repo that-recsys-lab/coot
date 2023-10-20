@@ -32,7 +32,7 @@ class Header(urwid.WidgetWrap):
         self.update = False
         self.set_name_header() 
         
-
+    # toggle client
     def change_client(self):
         if self.client == 'coot':
             self.client = 'toot'
