@@ -28,26 +28,35 @@ class Header(urwid.WidgetWrap):
     def __init__(self, app, user):
         self.app = app
         self.user = user
+        self.client = 'toot' #default client
+        self.update = False
+        self.set_name_header() 
+        
 
-        self.text = urwid.Text("")
-        self.cols = urwid.Columns([
-            ("pack", urwid.Text(('header_bold', 'toot'))),
-            ("pack", urwid.Text(('header', ' | {}@{}'.format(user.username, app.instance)))),
-            ("pack", self.text),
-        ])
-
-        widget = urwid.AttrMap(self.cols, 'header')
-        widget = urwid.Padding(widget)
-        self._wrapped_widget = widget
+    def change_client(self):
+        if self.client == 'coot':
+            self.client = 'toot'
+            self.set_name_header()
+        else: 
+            self.client = 'coot'
+            self.set_name_header()
 
     # Change the coot/toot in the header
-    def change_servername(self, text):
-        self.cols = urwid.Columns([
-            ("pack", urwid.Text(('header_bold', text))),
+    def set_name_header(self):
+        self.text = urwid.Text("")
+        self.cols = urwid.Columns([    
+            ("pack", urwid.Text(('header_bold', self.client))),
             ("pack", urwid.Text(('header', ' | {}@{}'.format(self.user.username, self.app.instance)))),
             ("pack", self.text),
         ])
-        self._wrapped_widget.original_widget = urwid.AttrMap(self.cols, 'header')
+        if self.update == False:
+            widget = urwid.AttrMap(self.cols, 'header')
+            widget = urwid.Padding(widget)
+            self._wrapped_widget = widget
+            self.update = True
+        else:
+            self._wrapped_widget.original_widget = urwid.AttrMap(self.cols, 'header')
+            
 
     def clear_text(self, text):
         self.text.set_text("")

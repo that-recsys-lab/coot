@@ -196,7 +196,7 @@ class Timeline(urwid.Columns):
             return
         
         if key in ("x", "X"):
-            self.tui.header.change_servername("coot")
+            self.tui.header.change_client()
             return
 
         if key in ("q", "Q"):
