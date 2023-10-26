@@ -8,7 +8,7 @@ from toot.console import get_default_visibility
 from toot.exceptions import ApiError
 
 from .compose import StatusComposer
-from .constants import PALETTE_TOOT, PALETTE_COOT
+from .constants import PALETTE
 from .entities import Status
 from .overlays import ExceptionStackTrace, GotoMenu, Help, StatusSource, StatusLinks, StatusZoom
 from .overlays import StatusDeleteConfirmation, Account
@@ -28,13 +28,21 @@ class Header(urwid.WidgetWrap):
     def __init__(self, app, user):
         self.app = app
         self.user = user
-        self.client = 'toot' 
+        self.client = 'toot' #default client
         self.update = False
-        self.set_name_header(self.client) 
+        self.set_name_header() 
+        
+    # toggle client
+    def change_client(self):
+        if self.client == 'coot':
+            self.client = 'toot'
+            self.set_name_header()
+        else: 
+            self.client = 'coot'
+            self.set_name_header()
 
     # Change the coot/toot in the header
-    def set_name_header(self, client):
-        self.client = client
+    def set_name_header(self):
         self.text = urwid.Text("")
         self.cols = urwid.Columns([    
             ("pack", urwid.Text(('header_bold', self.client))),
@@ -88,29 +96,16 @@ class TUI(urwid.Frame):
     loop: urwid.MainLoop
     screen: urwid.BaseScreen
 
-            # toggle client
-    def change_client(self):
-        
-        if self.client == 'coot':
-            self.client = 'toot'
-            self.header.set_name_header(self.client)
-            mapped_palette = self.map_palette(PALETTE_TOOT)
-            self.update_palette(mapped_palette)
-
-        else: 
-            self.client = 'coot'
-            self.header.set_name_header(self.client)
-            mapped_palette = self.map_palette(PALETTE_COOT)
-            self.update_palette(mapped_palette)
-            
-
     @staticmethod
     def create(app, user, args):
         """Factory method, sets up TUI and an event loop."""
         screen = TUI.create_screen(args)
         tui = TUI(app, user, screen, args)
 
-        palette = tui.map_palette(PALETTE_TOOT)
+        palette = PALETTE.copy()
+        overrides = settings.get_setting("tui.palette", dict, {})
+        for name, styles in overrides.items():
+            palette.append(tuple([name] + styles))
 
         loop = urwid.MainLoop(
             tui,
@@ -122,19 +117,6 @@ class TUI(urwid.Frame):
         tui.loop = loop
 
         return tui
-
-    def map_palette(self, palette):
-        overrides = settings.get_setting("tui.palette", dict, {})
-        for name, styles in overrides.items():
-            palette.append(tuple([name] + styles))
-        return palette
-
-    def update_palette(self, client_palette):
-        # Set the updated palette
-        self.loop.screen.register_palette(client_palette)
-
-        # Redraw the screen to apply the new palette
-        self.loop.draw_screen()
 
     @staticmethod
     def create_screen(args):
@@ -153,7 +135,6 @@ class TUI(urwid.Frame):
         self.user = user
         self.args = args
         self.config = config.load_config()
-        self.client = 'toot'
 
         self.loop = None  # late init, set in `create`
         self.screen = screen
