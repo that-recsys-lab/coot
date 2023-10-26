@@ -10,7 +10,7 @@
 # http://urwid.org/tutorial/index.html#display-attributes
 # http://urwid.org/manual/displayattributes.html#using-display-attributes
 
-PALETTE = [
+PALETTE_TOOT = [
     # Components
     ('button', 'white', 'black'),
     ('button_focused', 'light gray', 'dark magenta', 'bold,underline'),
@@ -26,6 +26,55 @@ PALETTE = [
     ('footer_status_bold', 'white, bold', 'dark blue'),
     ('header', 'white', 'dark blue'),
     ('header_bold', 'white,bold', 'dark blue', 'bold'),
+    ('intro_bigtext', 'yellow', ''),
+    ('intro_smalltext', 'light blue', ''),
+    ('poll_bar', 'white', 'dark blue'),
+    ('status_detail_account', 'dark green', ''),
+    ('status_detail_bookmarked', 'light red', ''),
+    ('status_detail_timestamp', 'light blue', ''),
+    ('status_list_account', 'dark green', ''),
+    ('status_list_selected', 'white,bold', 'dark green', 'bold,underline'),
+    ('status_list_timestamp', 'light blue', ''),
+
+    # Functional
+    ('account', 'dark green', ''),
+    ('hashtag', 'light cyan,bold', '', 'bold'),
+    ('hashtag_followed', 'yellow,bold', '', 'bold'),
+    ('link', ',italics', '', ',italics'),
+    ('link_focused', ',italics', 'dark magenta', "underline,italics"),
+    ('shortcut', 'light blue', ''),
+    ('shortcut_highlight', 'white,bold', '', 'bold'),
+    ('warning', 'light red', ''),
+
+    # Visiblity
+    ('visibility_public', 'dark gray', ''),
+    ('visibility_unlisted', 'white', ''),
+    ('visibility_private', 'dark cyan', ''),
+    ('visibility_direct', 'yellow', ''),
+
+    # Styles
+    ('bold', ',bold', ''),
+    ('dim', 'dark gray', ''),
+    ('highlight', 'yellow', ''),
+    ('success', 'dark green', ''),
+]
+
+PALETTE_COOT = [
+    # Components
+    ('button', 'white', 'black'),
+    ('button_focused', 'light gray', 'dark magenta', 'bold,underline'),
+    ('card_author', 'yellow', ''),
+    ('card_title', 'dark green', ''),
+    ('columns_divider', 'white', 'dark blue'),
+    ('content_warning', 'white', 'dark magenta'),
+    ('editbox', 'white', 'black'),
+    ('editbox_focused', 'white', 'dark magenta'),
+    ('footer_message', 'dark green', ''),
+    ('footer_message_error', 'light red', ''),
+    ('footer_status', 'white', 'dark blue'),
+    ('footer_status_bold', 'white, bold', 'dark blue'),
+    ('header', 'white', 'dark cyan'),
+    ('header_bold', 'white,bold', 'dark cyan', 'bold'),
     ('intro_bigtext', 'yellow', ''),
     ('intro_smalltext', 'light blue', ''),
     ('poll_bar', 'white', 'dark blue'),
