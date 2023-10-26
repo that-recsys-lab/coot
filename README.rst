@@ -48,3 +48,9 @@ License
 Copyright Ivan Habunek <ivan@habunek.com> and contributors.
 
 Licensed under `GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>`_, see `LICENSE <LICENSE>`_.
+
+How to run
+-------
+1. move the local directory to your machine. For example, cd /Documents/GitHub/coot
+2. run command `python -m toot tui`
+* may need to install uninstalled packages
