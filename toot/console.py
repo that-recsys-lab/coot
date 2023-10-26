@@ -378,6 +378,11 @@ TUI_COMMANDS = [
                 "default": False,
                 "help": "Show relative datetimes in status list.",
             }),
+            (["--corgi"], {
+                "action": "store",
+                "default": "127.0.0.1:5000",
+                "help": "Point to CORGI server",
+            }),
         ],
         require_auth=True,
     ),
