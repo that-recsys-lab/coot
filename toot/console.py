@@ -378,6 +378,7 @@ TUI_COMMANDS = [
                 "default": False,
                 "help": "Show relative datetimes in status list.",
             }),
+            # added for -- toot tui --corgi
             (["--corgi"], {
                 "action": "store",
                 "default": "127.0.0.1:5000",

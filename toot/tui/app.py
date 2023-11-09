@@ -3,7 +3,7 @@ import urwid
 
 from concurrent.futures import ThreadPoolExecutor
 
-from toot import api, config, __version__, settings
+from toot import api, config, __version__, settings, App
 from toot.console import get_default_visibility
 from toot.exceptions import ApiError
 
@@ -107,8 +107,11 @@ class TUI(urwid.Frame):
     @staticmethod
     def create(app, user, args):
         """Factory method, sets up TUI and an event loop."""
+        # switch the corgi server
+        # app = App(app.instance, args.corgi, app.client_id, app.client_secret)
         screen = TUI.create_screen(args)
         tui = TUI(app, user, screen, args)
+
 
         palette = tui.map_palette(PALETTE_TOOT)
 
@@ -120,6 +123,8 @@ class TUI(urwid.Frame):
             screen=screen,
         )
         tui.loop = loop
+
+        # print(f"args: {args.corgi}")
 
         return tui
 
